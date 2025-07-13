@@ -1,5 +1,5 @@
 {
-    "name": "wildqueue/wildqueue",
+    "name": "yaelliethy/wildqueue",
     "description": "A Laravel package for dynamically managing queue workers.",
     "type": "library",
     "license": "MIT",
