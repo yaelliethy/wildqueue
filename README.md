@@ -38,6 +38,7 @@ return [
     'enabled' => true,           // Enable/disable dynamic worker spawning
     'idle_timeout' => 300,       // Seconds before a worker is considered idle (5 minutes)
     'auto_prune' => true,        // Automatically register pruning with Laravel scheduler
+    'cache_duration' => 30,      // How long to cache worker status (seconds)
     
     // Define regex patterns for queues that should have workers spawned
     'queue_patterns' => [
@@ -52,6 +53,41 @@ return [
         '/.*:internal$/',        // Exclude internal queues
     ],
 ];
+```
+
+### Cache Duration
+
+The `cache_duration` setting controls how long WildQueue caches the status of workers to avoid repetitive database queries and process checks. This significantly improves performance during job bursts but may delay detection of dead workers.
+
+**Configuration Options:**
+
+```php
+// In config/wildqueue.php
+'cache_duration' => 30,  // Cache for 30 seconds (default)
+```
+
+```bash
+# Or via environment variable in .env
+WILDQUEUE_CACHE_DURATION=15
+```
+
+**Use Cases:**
+
+- **Default (30 seconds)**: Good balance for most applications
+- **High-frequency jobs (60 seconds)**: Better performance for applications with many rapid job dispatches
+- **Critical responsiveness (10-15 seconds)**: Faster worker respawn detection for time-sensitive applications
+- **Development/testing (0 seconds)**: Disables caching for immediate feedback (not recommended for production)
+
+**Example:**
+```bash
+# For faster worker recovery in production
+WILDQUEUE_CACHE_DURATION=15
+
+# For high-throughput systems
+WILDQUEUE_CACHE_DURATION=60
+
+# For development (immediate worker detection)
+WILDQUEUE_CACHE_DURATION=0
 ```
 
 ### Pattern Matching Examples
@@ -175,7 +211,7 @@ protected function schedule(Schedule $schedule)
 
 ## Performance Optimizations
 
-- **Caching**: Active workers are cached for 30 seconds to avoid repetitive database queries
+- **Caching**: Active workers are cached for 30 seconds to avoid repetitive database queries (time is configurable)
 - **Persistent Workers**: Workers don't exit after processing jobs, they continue running
 - **Scheduler-Based Pruning**: Uses Laravel's native scheduler for reliable, efficient cleanup
 - **Pattern Filtering**: Only spawn workers for queues that match your business logic

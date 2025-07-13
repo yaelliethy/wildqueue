@@ -64,4 +64,16 @@ return [
     |
     */
     'auto_prune' => env('WILDQUEUE_AUTO_PRUNE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Duration
+    |--------------------------------------------------------------------------
+    |
+    | The number of seconds to cache worker status to avoid repetitive
+    | database and process checks. This improves performance during job
+    | bursts but may delay detection of dead workers.
+    |
+    */
+    'cache_duration' => env('WILDQUEUE_CACHE_DURATION', 30),
 ]; 

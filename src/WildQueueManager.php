@@ -42,8 +42,8 @@ class WildQueueManager
         if (!$this->isProcessRunning($worker->pid)) {
             $this->spawnWorker($queueName);
         } else {
-            // Worker is running, cache it for 30 seconds
-            Cache::put($cacheKey, true, 30);
+            // Worker is running, cache it
+            Cache::put($cacheKey, true, config('wildqueue.cache_duration', 30));
         }
     }
 
@@ -79,8 +79,8 @@ class WildQueueManager
             ]
         );
 
-        // Cache the worker as active for 30 seconds
-        Cache::put("wildqueue:worker:{$queueName}", true, 30);
+        // Cache the worker as active
+        Cache::put("wildqueue:worker:{$queueName}", true, config('wildqueue.cache_duration', 30));
         
         return $worker;
     }
