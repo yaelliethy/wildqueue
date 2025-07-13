@@ -1,12 +1,12 @@
 {
-    "name": "wildqueue/wildqueue",
+    "name": "yaelliethy/wildqueue",
     "description": "A Laravel package for dynamically managing queue workers.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Your Name",
-            "email": "you@example.com"
+            "name": "Youssef Elliethy",
+            "email": "y.a.elliethy@gmail.com"
         }
     ],
     "require": {
