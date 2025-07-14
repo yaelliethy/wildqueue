@@ -16,7 +16,7 @@ A Laravel package that automatically manages workers for dynamically named queue
 
 1. Add the package to your project:
 ```bash
-composer require wildqueue/wildqueue
+composer require yaelliethy/wildqueue
 ```
 
 2. Publish the configuration:
