@@ -24,10 +24,18 @@ composer require wildqueue/wildqueue
 php artisan vendor:publish --provider="WildQueue\WildQueueServiceProvider" --tag="config"
 ```
 
-3. Run the migration:
-```bash
-php artisan migrate
-```
+3. **Migration Setup**: 
+
+   **Option A (Automatic)** - The migration will be automatically available after installation:
+   ```bash
+   php artisan migrate
+   ```
+
+   **Option B (Manual)** - If the migration doesn't appear, publish it manually:
+   ```bash
+   php artisan vendor:publish --provider="WildQueue\WildQueueServiceProvider" --tag="migrations"
+   php artisan migrate
+   ```
 
 ## Configuration
 

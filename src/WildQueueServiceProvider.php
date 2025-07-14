@@ -23,6 +23,10 @@ class WildQueueServiceProvider extends ServiceProvider
                 __DIR__.'/../config/wildqueue.php' => config_path('wildqueue.php'),
             ], 'config');
 
+            $this->publishes([
+                __DIR__.'/database/migrations' => database_path('migrations'),
+            ], 'migrations');
+
             $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
             $this->commands([
