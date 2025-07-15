@@ -56,7 +56,7 @@ class WildQueueManager
             mkdir(dirname($logPath), 0755, true);
         }
 
-        $command = "php artisan queue:work --queue={$queueName} --tries=1 >> {$logPath} 2>&1";
+        $command = "php artisan queue:work --queue={$queueName} >> {$logPath} 2>&1";
         
         $process = Process::fromShellCommandline(
             $command,
