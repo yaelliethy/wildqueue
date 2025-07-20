@@ -33,7 +33,11 @@ class WildQueueManager
         if (Cache::get($cacheKey)) {
             return; // Worker is cached as active
         }
-
+        //Check if worker is already running
+        $worker = WildQueueWorker::where('queue', $queueName)->where('status', 'running')->first();
+        if ($worker) {
+            return;
+        }
         $worker = WildQueueWorker::firstOrCreate(
             ['queue' => $queueName],
             ['status' => 'stopped']
@@ -50,14 +54,14 @@ class WildQueueManager
     public function spawnWorker(string $queueName): WildQueueWorker
     {
         $logPath = storage_path("logs/queue-worker-{$queueName}.log");
-        
+
         // Ensure logs directory exists
         if (!is_dir(dirname($logPath))) {
             mkdir(dirname($logPath), 0755, true);
         }
 
-        $command = "php artisan queue:work --queue={$queueName} --tries=1 >> {$logPath} 2>&1";
-        
+        $command = "php artisan queue:work --queue={$queueName} >> {$logPath} 2>&1";
+
         $process = Process::fromShellCommandline(
             $command,
             base_path(),
@@ -66,7 +70,7 @@ class WildQueueManager
                 'PHP_BINARY' => PHP_BINARY
             ]
         );
-        
+
         $process->start();
 
         $worker = WildQueueWorker::updateOrCreate(
@@ -81,10 +85,10 @@ class WildQueueManager
 
         // Cache the worker as active
         Cache::put("wildqueue:worker:{$queueName}", true, config('wildqueue.cache_duration', 30));
-        
+
         return $worker;
     }
-    
+
     public function stopWorker(string $queueName): bool
     {
         $worker = WildQueueWorker::where('queue', $queueName)->first();
@@ -109,7 +113,7 @@ class WildQueueManager
 
         return false;
     }
-    
+
     public function updateLastJobAt(string $queueName): void
     {
         WildQueueWorker::where('queue', $queueName)
@@ -137,10 +141,10 @@ class WildQueueManager
                 $prunedCount++;
             }
         }
-        
+
         return $prunedCount;
     }
-    
+
     protected function isProcessRunning(?int $pid): bool
     {
         if ($pid === null) {
@@ -187,4 +191,4 @@ class WildQueueManager
 
         return $shouldSpawn;
     }
-} 
+}
