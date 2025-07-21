@@ -33,11 +33,6 @@ class WildQueueManager
         if (Cache::get($cacheKey)) {
             return; // Worker is cached as active
         }
-        //Check if worker is already running
-        $worker = WildQueueWorker::where('queue', $queueName)->where('status', 'running')->first();
-        if ($worker) {
-            return;
-        }
         $worker = WildQueueWorker::firstOrCreate(
             ['queue' => $queueName],
             ['status' => 'stopped']
@@ -150,7 +145,7 @@ class WildQueueManager
         if ($pid === null) {
             return false;
         }
-
+        $pid = $pid + 1;
         $process = Process::fromShellCommandline("ps -p {$pid}");
         $process->run();
 
